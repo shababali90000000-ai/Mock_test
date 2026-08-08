@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Test Portal - Cadre Leader Shabab Ali</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface2: #273449;
+            --accent: #38bdf8;
+            --accent2: #818cf8;
+            --gold: #f59e0b;
+            --green: #10b981;
+            --red: #ef4444;
+            --text: #e2e8f0;
+            --text2: #b0bec5;
+            --border: #334155;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: radial-gradient(ellipse at 20% 50%, rgba(56,189,248,0.06) 0%, transparent 60%),
+                            radial-gradient(ellipse at 80% 20%, rgba(129,140,248,0.05) 0%, transparent 60%),
+                            radial-gradient(ellipse at 50% 80%, rgba(245,158,11,0.04) 0%, transparent 60%);
+        }
+        .container {
+            width: 100%;
+            max-width: 680px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 32px 28px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+            border-radius: 3px 3px 0 0;
+        }
+        .screen { display: none; animation: fadeSlideIn 0.4s ease; }
+        .screen.active { display: block; }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
+        @keyframes glowPulse { 0%,100%{ box-shadow: 0 0 8px rgba(56,189,248,0.3); } 50%{ box-shadow: 0 0 22px rgba(56,189,248,0.7); } }
+        @keyframes bounceIn { 0%{ transform: scale(0.3); opacity:0; } 50%{ transform: scale(1.05); } 70%{ transform: scale(0.95); } 100%{ transform: scale(1); opacity:1; } }
+        h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        h2 { font-size: 1.25rem; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+        h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); }
+        .subtitle { color: var(--text2); font-size: 0.9rem; margin-bottom: 20px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text); font-size: 0.9rem; }
+        input[type="text"] {
+            width: 100%;
+            padding: 13px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface2);
+            color: var(--text);
+            font-size: 1rem;
+            transition: all var(--transition);
+            outline: none;
+            font-family: inherit;
+        }
+        input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(56,189,248,0.1); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 28px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            letter-spacing: 0.02em;
+            font-family: inherit;
+            text-decoration: none;
+            justify-content: center;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; box-shadow: 0 4px 16px rgba(56,189,248,0.3); }
+        .btn-primary:hover { box-shadow: 0 6px 24px rgba(56,189,248,0.5); transform: translateY(-2px); }
+        .btn-outline { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+        .btn-outline:hover { background: rgba(56,189,248,0.08); }
+        .btn-success { background: var(--green); color: #fff; box-shadow: 0 4px 16px rgba(16,185,129,0.3); }
+        .btn-success:hover { box-shadow: 0 6px 24px rgba(16,185,129,0.5); transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+        .voice-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-radius: 50px;
+            background: var(--surface2);
+            border: 2px solid var(--border);
+            margin: 16px 0;
+            transition: all var(--transition);
+        }
+        .voice-indicator.listening { border-color: var(--accent); animation: glowPulse 2s infinite; background: rgba(56,189,248,0.06); }
+        .voice-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text2); flex-shrink: 0; transition: all var(--transition); }
+        .voice-indicator.listening .voice-dot { background: var(--accent); animation: pulse 1.2s infinite; }
+        .voice-text { font-size: 0.9rem; color: var(--text2); font-weight: 500; }
+        .voice-indicator.listening .voice-text { color: var(--accent); }
+        .voice-heard { font-weight: 700; color: var(--gold); font-size: 1rem; min-height: 22px; margin-top: 2px; text-align: center; }
+        .option-card {
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            background: var(--surface2);
+            margin-bottom: 10px;
+            transition: all 0.25s ease;
+            font-weight: 500;
+            position: relative;
+        }
+        .option-card.selected { border-color: var(--accent) !important; background: rgba(56,189,248,0.12) !important; box-shadow: 0 0 20px rgba(56,189,248,0.25); animation: bounceIn 0.5s ease; }
+        .option-card.correct-reveal { border-color: var(--green) !important; background: rgba(16,185,129,0.1) !important; }
+        .option-card.wrong-reveal { border-color: var(--red) !important; background: rgba(239,68,68,0.08) !important; }
+        .option-label {
+            display: inline-block;
+            width: 30px; height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            background: var(--border);
+            margin-right: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text);
+        }
+        .option-card.selected .option-label { background: var(--accent); color: #fff; }
+        .progress-bar-outer { width: 100%; height: 6px; background: var(--border); border-radius: 10px; margin: 12px 0 8px; overflow: hidden; }
+        .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 10px; transition: width 0.4s ease; }
+        .progress-text { font-size: 0.8rem; color: var(--text2); text-align: right; }
+        .timer-display { font-weight: 700; font-size: 1.1rem; color: var(--gold); text-align: center; margin: 6px 0; letter-spacing: 0.05em; }
+        .result-card { background: var(--surface2); border-radius: var(--radius-sm); padding: 22px 20px; margin-bottom: 16px; border: 1px solid var(--border); }
+        .result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
+        .result-row:last-child { border-bottom: none; }
+        .result-label { color: var(--text2); font-weight: 500; }
+        .result-value { font-weight: 700; color: var(--text); }
+        .badge { display: inline-block; padding: 5px 16px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.03em; }
+        .badge-pass { background: rgba(16,185,129,0.2); color: var(--green); border: 1px solid rgba(16,185,129,0.4); }
+        .badge-fail { background: rgba(239,68,68,0.2); color: var(--red); border: 1px solid rgba(239,68,68,0.4); }
+        .explanation-block { background: var(--surface2); border-left: 3px solid var(--red); padding: 14px 16px; margin: 8px 0 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.9rem; line-height: 1.5; }
+        .explanation-block .q-title { font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+        .explanation-block .correct-ans { color: var(--green); font-weight: 600; }
+        .explanation-block .user-ans { color: var(--red); font-weight: 600; }
+        .blocked-icon { font-size: 4rem; text-align: center; margin-bottom: 12px; }
+        .roman-urdu { direction: ltr; unicode-bidi: embed; text-align: center; font-size: 1.05rem; color: #fca5a5; line-height: 1.8; font-family: 'Segoe UI', 'Inter', system-ui, sans-serif; }
+        .section-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+        @media (max-width: 500px) { .section-cards { grid-template-columns: 1fr; } .container { padding: 20px 14px; } h1 { font-size: 1.35rem; } }
+        .section-card { padding: 20px 16px; border-radius: var(--radius-sm); border: 2px solid var(--border); background: var(--surface2); text-align: center; transition: all var(--transition); }
+        .section-card.highlighted { border-color: var(--accent) !important; background: rgba(56,189,248,0.08) !important; box-shadow: 0 0 24px rgba(56,189,248,0.3); animation: bounceIn 0.5s ease; }
+        .section-card .section-icon { font-size: 2.2rem; margin-bottom: 8px; }
+        .section-card .section-name { font-weight: 700; color: var(--text); font-size: 0.95rem; }
+        .section-card .section-hint { font-size: 0.78rem; color: var(--text2); margin-top: 4px; }
+        .keyword-badge { display: inline-block; background: var(--accent); color: #000; font-weight: 800; padding: 3px 10px; border-radius: 4px; font-size: 0.8rem; letter-spacing: 0.06em; margin: 0 2px; }
+        @media print {
+            body { background: #fff !important; color: #000 !important; padding: 0 !important; }
+            .container { box-shadow: none !important; border: 2px solid #000 !important; max-width: 100% !important; background: #fff !important; }
+            .container::before { background: #000 !important; }
+            .btn, .voice-indicator, .no-print { display: none !important; }
+            .result-card { border: 1px solid #000 !important; background: #f9f9f9 !important; }
+            .badge-pass { border: 2px solid #10b981 !important; color: #10b981 !important; background: #ecfdf5 !important; }
+            .badge-fail { border: 2px solid #ef4444 !important; color: #ef4444 !important; background: #fef2f2 !important; }
+            .explanation-block { border-left: 3px solid #ef4444 !important; }
+            h1 { -webkit-text-fill-color: #000 !important; color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="mainContainer">
+    <!-- Screen: Name Entry -->
+    <div class="screen active" id="nameScreen">
+        <h1>📝 Mock Test Portal</h1>
+        <p class="subtitle">Cadre Leader <strong>Shabab Ali</strong> · Voice-Controlled Examination</p>
+        <div class="form-group">
+            <label for="userName">Enter Your Full Name:</label>
+            <input type="text" id="userName" placeholder="Type your full name here..." autocomplete="off">
+        </div>
+        <button class="btn btn-primary" id="btnNext">Next ➜</button>
+        <p style="font-size:0.75rem;color:var(--text2);margin-top:10px;">
+            ⚠️ Important: You can take this test only <strong>once</strong> from this device.
+        </p>
+    </div>
+    <!-- Screen: Section Selection (Voice Only) -->
+    <div class="screen" id="sectionScreen">
+        <h1>🎯 Select Your Section</h1>
+        <p class="subtitle">Use your <strong>voice</strong> to select. No clicking allowed.</p>
+        <div class="voice-indicator" id="sectionVoiceIndicator">
+            <div class="voice-dot"></div>
+            <span class="voice-text">🎤 Waiting for your voice...</span>
+        </div>
+        <p style="text-align:center;color:var(--text2);font-size:0.85rem;margin:8px 0;">
+            Say <span class="keyword-badge">SI</span> for Section A &nbsp;|&nbsp; Say <span class="keyword-badge">MI</span> for Section B
+        </p>
+        <div class="voice-heard" id="sectionHeardText"></div>
+        <div class="section-cards">
+            <div class="section-card" id="sectionCardA">
+                <div class="section-icon">💻</div>
+                <div class="section-name">Section A</div>
+                <div style="font-size:0.85rem;color:var(--accent);font-weight:600;">Diploma in Computer Networking</div>
+                <div class="section-hint">Say <strong>"SI"</strong> to choose</div>
+            </div>
+            <div class="section-card" id="sectionCardB">
+                <div class="section-icon">🌐</div>
+                <div class="section-name">Section B</div>
+                <div style="font-size:0.85rem;color:var(--accent2);font-weight:600;">WordPress Fundamentals</div>
+                <div class="section-hint">Say <strong>"MI"</strong> to choose</div>
+            </div>
+        </div>
+        <p style="text-align:center;font-size:0.8rem;color:var(--text2);margin-top:8px;">
+            🔊 Agar Section <strong>A</strong> dena hai to <strong>"SI"</strong> bolo · Agar Section <strong>B</strong> dena hai to <strong>"MI"</strong> bolo
+        </p>
+    </div>
+    <!-- Screen: MCQ Interface (Voice Only) -->
+    <div class="screen" id="mcqScreen">
+        <h1 id="mcqSectionTitle">📋 MCQ Test</h1>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <span style="font-weight:600;color:var(--text2);font-size:0.9rem;" id="mcqProgressLabel">Question 1 of 10</span>
+            <span class="timer-display" id="timerDisplay">⏱ 00:00</span>
+        </div>
+        <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar" style="width:0%;"></div></div>
+        <div class="voice-indicator" id="mcqVoiceIndicator">
+            <div class="voice-dot"></div>
+            <span class="voice-text">🎤 Listening for your answer...</span>
+        </div>
+        <p style="text-align:center;color:var(--text2);font-size:0.85rem;margin:4px 0;">
+            Say <span class="keyword-badge">SI</span> for Option A &nbsp;|&nbsp; Say <span class="keyword-badge">MI</span> for Option B
+        </p>
+        <div class="voice-heard" id="mcqHeardText"></div>
+        <div id="mcqQuestionArea">
+            <p style="font-weight:600;font-size:1.05rem;margin-bottom:14px;" id="mcqQuestionText"></p>
+            <div class="option-card" id="optionCardA"><span class="option-label">A</span> <span id="optionAText"></span></div>
+            <div class="option-card" id="optionCardB"><span class="option-label">B</span> <span id="optionBText"></span></div>
+        </div>
+        <p style="text-align:center;font-size:0.78rem;color:var(--text2);margin-top:6px;">
+            🔊 Option <strong>A</strong> ke liye <strong>"SI"</strong> bolo · Option <strong>B</strong> ke liye <strong>"MI"</strong> bolo
+        </p>
+    </div>
+    <!-- Screen: Results -->
+    <div class="screen" id="resultScreen">
+        <h1>📊 Examination Result</h1>
+        <p class="subtitle">Test completed! Review your performance below.</p>
+        <div class="result-card" id="resultDetailsCard">
+            <h3>👤 Candidate Details</h3>
+            <div class="result-row"><span class="result-label">Name:</span><span class="result-value" id="resName">-</span></div>
+            <div class="result-row"><span class="result-label">Section:</span><span class="result-value" id="resSection">-</span></div>
+            <div class="result-row"><span class="result-label">Score:</span><span class="result-value" id="resScore">-</span></div>
+            <div class="result-row"><span class="result-label">Time Taken:</span><span class="result-value" id="resTime">-</span></div>
+            <div class="result-row"><span class="result-label">Status:</span><span class="result-value" id="resStatus">-</span></div>
+        </div>
+        <button class="btn btn-success no-print" id="btnDownload" style="margin-bottom:16px;width:100%;">🖨️ Download / Print Results (PDF)</button>
+        <h3 style="margin-top:8px;">❌ Incorrect Answers & Explanations</h3>
+        <div id="wrongAnswersContainer"><p style="color:var(--text2);font-size:0.9rem;">Loading...</p></div>
+        <button class="btn btn-outline no-print" id="btnReload" style="margin-top:12px;width:100%;">🔒 Close</button>
+    </div>
+    <!-- Screen: Blocked -->
+    <div class="screen" id="blockedScreen">
+        <div class="blocked-icon">🚫</div>
+        <h1 style="text-align:center;color:var(--red);">Access Denied</h1>
+        <div class="roman-urdu">
+            Tum dobara test nahi de sakte.<br>
+            Ye <strong>Cadre Leader Shabab Ali</strong> ki taraf se<br>
+            block kiya gaya hai.
+        </div>
+        <p style="text-align:center;color:var(--text2);font-size:0.8rem;margin-top:16px;">
+            This device has already been used to take the test.<br>Further attempts are not permitted.
+        </p>
+    </div>
+</div>
+<script>
+    (function() {
+        // ==================== STATE ====================
+        const STATE = {
+            userName: '',
+            selectedSection: null,
+            currentQuestionIndex: 0,
+            answers: [],
+            timerSeconds: 0,
+            timerInterval: null,
+            isListening: false,
+            recognition: null,
+            testCompleted: false,
+            testStarted: false,
+        };
+
+        // ==================== MCQ DATA ====================
+        const sectionAData = [
+            { id: 1, question: 'Which CPU execution step reads the next instruction from RAM into the registers?', optionA: 'Fetch', optionB: 'Decode', correct: 'A', explanation: 'Correct (A): Fetch is the step where the CPU reads the next instruction from RAM into registers.\nWrong (B): Decode is the step where the Control Unit interprets what action to perform.' },
+            { id: 2, question: 'What is it called when requested data is successfully found in the Cache memory?', optionA: 'Cache Hit', optionB: 'Cache Miss', correct: 'A', explanation: 'Correct (A): Cache Hit means requested data was successfully found in Cache memory.\nWrong (B): Cache Miss happens when data is not found in Cache and must be fetched from RAM.' },
+            { id: 3, question: 'Which type of memory is erased using Ultraviolet (UV) light before rewriting?', optionA: 'EPROM', optionB: 'EEPROM', correct: 'A', explanation: 'Correct (A): EPROM is erased using Ultraviolet (UV) light before rewriting.\nWrong (B): EEPROM is erased and reprogrammed using electrical signals.' },
+            { id: 4, question: 'Which Flash memory supports random byte access for direct code execution?', optionA: 'NOR Flash', optionB: 'NAND Flash', correct: 'A', explanation: 'Correct (A): NOR Flash supports random byte access for direct code execution.\nWrong (B): NAND Flash is mass-storage memory operating at the block level.' },
+            { id: 5, question: 'At which level do data Erase operations occur in SSD NAND Flash memory?', optionA: 'Block Level', optionB: 'Page Level', correct: 'A', explanation: 'Correct (A): Data Erase operations occur at the Block Level in NAND memory.\nWrong (B): Page Level is where Read and Write operations happen.' },
+            { id: 6, question: 'Which CPU component controls instruction timing and coordinates system components?', optionA: 'Control Unit (CU)', optionB: 'ALU', correct: 'A', explanation: 'Correct (A): The Control Unit controls instruction timing and coordinates CPU components.\nWrong (B): The ALU (Arithmetic Logic Unit) only performs math and logical operations.' },
+            { id: 7, question: 'What type of memory retains stored data even when the electrical power is turned off?', optionA: 'Non-Volatile Memory', optionB: 'Volatile Memory', correct: 'A', explanation: 'Correct (A): Non-Volatile memory retains data persistent without electrical power.\nWrong (B): Volatile memory loses stored data as soon as power turns off.' },
+            { id: 8, question: 'Which ROM is permanently written during factory manufacturing?', optionA: 'Mask ROM', optionB: 'PROM', correct: 'A', explanation: 'Correct (A): Mask ROM is permanently written during factory manufacturing.\nWrong (B): PROM can be written only once after leaving the factory.' },
+            { id: 9, question: 'What is the main function of the Flash Translation Layer (FTL) in SSDs?', optionA: 'Translates Logical Block Addresses (LBA) to Physical Addresses (PBA)', optionB: 'Carries multiple bits simultaneously during data transfers', correct: 'A', explanation: 'Correct (A): FTL translates Logical Block Addresses (LBA) to Physical Addresses (PBA).\nWrong (B): Carrying multiple bits simultaneously is the job of Bus Width.' },
+            { id: 10, question: 'Which term refers to the quantity of bits carried simultaneously in a single transfer?', optionA: 'Bus Width', optionB: 'Bus Level', correct: 'A', explanation: 'Correct (A): Bus Width is the quantity of bits carried simultaneously in a single transfer.\nWrong (B): Bus Level refers to communication pathways connecting internal system components.' }
+        ];
+
+        const sectionBData = [
+            { id: 11, question: 'What is processed and organized data that gives clear meaning to the user called?', optionA: 'Information', optionB: 'Data', correct: 'A', explanation: 'Correct (A): Information is processed and organized data that gives clear meaning.\nWrong (B): Data consists of raw facts and figures with no meaning until processed.' },
+            { id: 12, question: 'Which reliable protocol breaks large data into small packets and delivers them without loss?', optionA: 'TCP', optionB: 'IP Address', correct: 'A', explanation: 'Correct (A): TCP breaks data into small packets and delivers them safely without loss.\nWrong (B): An IP Address is a unique numerical address assigned to a device.' },
+            { id: 13, question: 'What is the last part of a domain name (like .com or .org) that shows its category called?', optionA: 'TLD (Top-Level Domain)', optionB: 'Subdomain', correct: 'A', explanation: 'Correct (A): TLD is the last part of a domain name that indicates its category or country.\nWrong (B): A Subdomain is a child part of a main domain (e.g., blog.example.com).' },
+            { id: 14, question: 'Which web transfer protocol is unencrypted (unsafe) and sends data as plain text?', optionA: 'HTTP', optionB: 'HTTPS', correct: 'A', explanation: 'Correct (A): HTTP is unencrypted and unsafe because data travels in plain text.\nWrong (B): HTTPS is secure and encrypted using an SSL/TLS certificate.' },
+            { id: 15, question: 'Which standard port is used to run secure and encrypted web traffic (HTTPS)?', optionA: 'Port 443', optionB: 'Port 80', correct: 'A', explanation: 'Correct (A): Port 443 is dedicated to secure and encrypted HTTPS web traffic.\nWrong (B): Port 80 is used for unencrypted and normal HTTP web traffic.' },
+            { id: 16, question: 'Which default port is used to forward or send emails from one mail server to another?', optionA: 'Port 25 (SMTP)', optionB: 'Port 21 (FTP)', correct: 'A', explanation: 'Correct (A): Port 25 is the default port for sending emails via SMTP.\nWrong (B): Port 21 (FTP) is dedicated to transferring files between computers.' },
+            { id: 17, question: 'Which error code shows that the server is working fine, but the requested web page is not found?', optionA: '404 Not Found', optionB: '500 Internal Server Error', correct: 'A', explanation: 'Correct (A): 404 Not Found means the server works, but the requested page does not exist.\nWrong (B): 500 Internal Server Error means an unknown server-side error occurred.' },
+            { id: 18, question: 'What are small text files saved in a browser to remember login state and preferences called?', optionA: 'Cookies', optionB: 'Web Server', correct: 'A', explanation: 'Correct (A): Cookies are small text files stored in the browser that remember user preferences and login state.\nWrong (B): A Web Server is a computer that stores website files and delivers them to users.' },
+            { id: 19, question: 'What system acts as the internet\'s phonebook by converting domain names into IP addresses?', optionA: 'DNS (Domain Name System)', optionB: 'URL (Uniform Resource Locator)', correct: 'A', explanation: 'Correct (A): DNS converts human-friendly domain names into computer IP addresses.\nWrong (B): A URL is the complete address of a specific web page or file.' },
+            { id: 20, question: 'Which error code indicates that the server is temporarily overloaded or down for maintenance?', optionA: '503 Service Unavailable', optionB: '500 Internal Server Error', correct: 'A', explanation: 'Correct (A): 503 Service Unavailable means the server has temporary heavy load or is under maintenance.\nWrong (B): 500 Internal Server Error refers to a general server error.' }
+        ];
+
+        function getMCQData() { return STATE.selectedSection === 'A' ? sectionAData : sectionBData; }
+
+        // ==================== ANTI-CHEAT ====================
+        const STORAGE_KEY = 'mock_test_shabab_ali_lock';
+        function generateFingerprint() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 200; canvas.height = 50;
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top'; ctx.font = '14px Arial';
+            ctx.fillStyle = '#f60'; ctx.fillRect(0,0,200,50);
+            ctx.fillStyle = '#069'; ctx.fillText('ShababAli2024!@#', 4, 17);
+            const canvasData = canvas.toDataURL();
+            const navData = [navigator.userAgent, navigator.language, navigator.platform, screen.colorDepth, screen.width+'x'+screen.height, new Date().getTimezoneOffset(), navigator.hardwareConcurrency||'unknown', navigator.deviceMemory||'unknown'].join('|||');
+            let hash = 0;
+            const combined = canvasData + navData;
+            for (let i=0; i<combined.length; i++) { hash = ((hash<<5)-hash)+combined.charCodeAt(i); hash|=0; }
+            return 'fp_'+Math.abs(hash).toString(36);
+        }
+
+        async function getPublicIP() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 4000);
+                const response = await fetch('https://api.ipify.org?format=json', { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (response.ok) { const data = await response.json(); return data.ip || null; }
+            } catch(e) { /* silent */ }
+            return null;
+        }
+
+        async function checkAccess() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            const fp = generateFingerprint();
+            const ip = await getPublicIP();
+            if (stored) {
+                try {
+                    const data = JSON.parse(stored);
+                    if (data.fingerprint === fp || (ip && data.ip === ip)) return false;
+                    if (data.testCompleted && data.fingerprint === fp) return false;
+                } catch(e) { localStorage.removeItem(STORAGE_KEY); }
+            }
+            return true;
+        }
+
+        function saveLock(completed = false, score = 0, total = 0, time = 0, passed = false) {
+            const fp = generateFingerprint();
+            getPublicIP().then(ip => {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    testStarted: true,
+                    testCompleted: completed,
+                    fingerprint: fp,
+                    ip: ip || null,
+                    timestamp: Date.now(),
+                    userName: STATE.userName,
+                    section: STATE.selectedSection,
+                    score, total, timeTaken: time, passed
+                }));
+            }).catch(() => {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    testStarted: true,
+                    testCompleted: completed,
+                    fingerprint: fp,
+                    ip: null,
+                    timestamp: Date.now(),
+                    userName: STATE.userName,
+                    section: STATE.selectedSection,
+                    score, total, timeTaken: time, passed
+                }));
+            });
+        }
+
+        // ==================== SCREENS ====================
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        // ==================== VOICE ====================
+        function getRecognition() {
+            return new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        }
+
+        function detectKeyword(transcript) {
+            const t = transcript.toLowerCase().replace(/\s+/g,' ').trim();
+            if (/\b(si|ess\s*i|s\s*i|see|ess\s*eye|s\s*eye)\b/.test(t)) return 'A';
+            if (/\b(mi|em\s*i|m\s*i|my|em\s*eye|m\s*eye)\b/.test(t)) return 'B';
+            return null;
+        }
+
+        function stopRecognition() {
+            if (STATE.recognition) {
+                try { STATE.recognition.stop(); STATE.recognition.abort(); } catch(e){}
+                STATE.recognition = null;
+            }
+            STATE.isListening = false;
+            document.querySelectorAll('.voice-indicator').forEach(el => el.classList.remove('listening'));
+        }
+
+        function updateIndicator(type, listening) {
+            const el = document.getElementById(type === 'section' ? 'sectionVoiceIndicator' : 'mcqVoiceIndicator');
+            if (el) {
+                if (listening) el.classList.add('listening'); else el.classList.remove('listening');
+            }
+        }
+
+        function startSectionListening() {
+            stopRecognition();
+            if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                alert('Voice recognition not supported. Please use Google Chrome.');
+                return;
+            }
+            const rec = getRecognition();
+            rec.lang = 'en-US'; rec.continuous = true; rec.interimResults = true;
+            STATE.recognition = rec;
+            STATE.isListening = true;
+            updateIndicator('section', true);
+            let detected = false;
+
+            rec.onresult = (e) => {
+                for (let i=e.resultIndex; i<e.results.length; i++) {
+                    const transcript = e.results[i][0].transcript;
+                    document.getElementById('sectionHeardText').textContent = '👂 Heard: "'+transcript+'"';
+                    const kw = detectKeyword(transcript);
+                    if (kw && !detected && STATE.selectedSection === null) {
+                        detected = true;
+                        stopRecognition();
+                        document.getElementById('sectionHeardText').textContent = '✅ Detected: "'+transcript+'" → Section '+(kw==='A'?'A (SI)':'B (MI)');
+                        updateIndicator('section', false);
+                        if (kw==='A') {
+                            document.getElementById('sectionCardA').classList.add('highlighted');
+                            document.getElementById('sectionCardB').classList.remove('highlighted');
+                        } else {
+                            document.getElementById('sectionCardB').classList.add('highlighted');
+                            document.getElementById('sectionCardA').classList.remove('highlighted');
+                        }
+                        STATE.selectedSection = kw;
+                        STATE.testStarted = true;
+                        saveLock(false);
+                        setTimeout(() => startMCQ(), 800);
+                    }
+                }
+            };
+            rec.onerror = (e) => {
+                if (e.error === 'not-allowed') alert('Microphone access denied. Please allow and reload.');
+                if (!detected && STATE.selectedSection===null && !STATE.testCompleted) {
+                    setTimeout(() => { if (!STATE.isListening && STATE.selectedSection===null) startSectionListening(); }, 1000);
+                }
+            };
+            rec.onend = () => {
+                STATE.isListening = false;
+                updateIndicator('section', false);
+                if (!detected && STATE.selectedSection===null && !STATE.testCompleted) {
+                    setTimeout(() => { if (!STATE.isListening && STATE.selectedSection===null) startSectionListening(); }, 600);
+                }
+            };
+            rec.start();
+        }
+
+        function startMCQListening() {
+            stopRecognition();
+            if (!window.SpeechRecognition && !window.webkitSpeechRecognition) return;
+            const rec = getRecognition();
+            rec.lang = 'en-US'; rec.continuous = true; rec.interimResults = true;
+            STATE.recognition = rec;
+            STATE.isListening = true;
+            updateIndicator('mcq', true);
+            document.getElementById('mcqHeardText').textContent = '';
+            let answered = false;
+            const currentIdx = STATE.currentQuestionIndex;
+
+            rec.onresult = (e) => {
+                for (let i=e.resultIndex; i<e.results.length; i++) {
+                    const transcript = e.results[i][0].transcript;
+                    document.getElementById('mcqHeardText').textContent = '👂 Heard: "'+transcript+'"';
+                    const kw = detectKeyword(transcript);
+                    if (kw && !answered && STATE.currentQuestionIndex === currentIdx) {
+                        answered = true;
+                        stopRecognition();
+                        document.getElementById('mcqHeardText').textContent = '✅ Detected: "'+transcript+'" → Option '+(kw==='A'?'A (SI)':'B (MI)');
+                        updateIndicator('mcq', false);
+                        recordAnswer(kw);
+                        const cardA = document.getElementById('optionCardA');
+                        const cardB = document.getElementById('optionCardB');
+                        if (kw==='A') { cardA.classList.add('selected'); cardB.classList.remove('selected'); }
+                        else { cardB.classList.add('selected'); cardA.classList.remove('selected'); }
+                        setTimeout(() => {
+                            STATE.currentQuestionIndex++;
+                            if (STATE.currentQuestionIndex < getMCQData().length) {
+                                renderQuestion();
+                                cardA.classList.remove('selected'); cardB.classList.remove('selected');
+                                document.getElementById('mcqHeardText').textContent = '';
+                                setTimeout(() => startMCQListening(), 400);
+                            } else {
+                                finishTest();
+                            }
+                        }, 1400);
+                    }
+                }
+            };
+            rec.onerror = (e) => {
+                if (!answered && STATE.currentQuestionIndex===currentIdx && !STATE.testCompleted) {
+                    setTimeout(() => { if (!STATE.isListening && STATE.currentQuestionIndex===currentIdx) startMCQListening(); }, 800);
+                }
+            };
+            rec.onend = () => {
+                STATE.isListening = false;
+                updateIndicator('mcq', false);
+                if (!answered && STATE.currentQuestionIndex===currentIdx && !STATE.testCompleted) {
+                    setTimeout(() => { if (!STATE.isListening && STATE.currentQuestionIndex===currentIdx) startMCQListening(); }, 500);
+                }
+            };
+            rec.start();
+        }
+
+        function recordAnswer(opt) {
+            const q = getMCQData()[STATE.currentQuestionIndex];
+            STATE.answers.push({
+                questionIndex: STATE.currentQuestionIndex,
+                questionId: q.id,
+                question: q.question,
+                selectedOption: opt,
+                correctOption: q.correct,
+                isCorrect: opt === q.correct,
+                optionAText: q.optionA,
+                optionBText: q.optionB,
+                explanation: q.explanation
+            });
+        }
+
+        function renderQuestion() {
+            const data = getMCQData();
+            const q = data[STATE.currentQuestionIndex];
+            document.getElementById('mcqProgressLabel').textContent = `Question ${STATE.currentQuestionIndex+1} of ${data.length}`;
+            document.getElementById('progressBar').style.width = ((STATE.currentQuestionIndex/data.length)*100)+'%';
+            document.getElementById('mcqQuestionText').textContent = q.question;
+            document.getElementById('optionAText').textContent = q.optionA;
+            document.getElementById('optionBText').textContent = q.optionB;
+            document.getElementById('mcqSectionTitle').textContent = STATE.selectedSection==='A' ? '💻 Diploma in Computer Networking' : '🌐 WordPress Fundamentals';
+        }
+
+        function startMCQ() {
+            STATE.currentQuestionIndex = 0;
+            STATE.answers = [];
+            STATE.timerSeconds = 0;
+            showScreen('mcqScreen');
+            renderQuestion();
+            if (STATE.timerInterval) clearInterval(STATE.timerInterval);
+            STATE.timerInterval = setInterval(() => {
+                STATE.timerSeconds++;
+                const m = Math.floor(STATE.timerSeconds/60);
+                const s = STATE.timerSeconds%60;
+                document.getElementById('timerDisplay').textContent = '⏱ '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+            }, 1000);
+            setTimeout(() => startMCQListening(), 300);
+        }
+
+        function finishTest() {
+            if (STATE.timerInterval) clearInterval(STATE.timerInterval);
+            stopRecognition();
+            STATE.testCompleted = true;
+            const total = getMCQData().length;
+            const correct = STATE.answers.filter(a=>a.isCorrect).length;
+            const passed = correct >= 7;
+            const timeStr = (()=>{ const m=Math.floor(STATE.timerSeconds/60); const s=STATE.timerSeconds%60; return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); })();
+            saveLock(true, correct, total, STATE.timerSeconds, passed);
+            showScreen('resultScreen');
+            document.getElementById('resName').textContent = STATE.userName;
+            document.getElementById('resSection').textContent = STATE.selectedSection==='A'?'Diploma in Computer Networking':'WordPress Fundamentals';
+            document.getElementById('resScore').textContent = correct+' / '+total;
+            document.getElementById('resTime').textContent = timeStr;
+            document.getElementById('resStatus').innerHTML = passed ? '<span class="badge badge-pass">✅ PASSED</span>' : '<span class="badge badge-fail">❌ FAILED</span>';
+            const wrong = STATE.answers.filter(a=>!a.isCorrect);
+            const container = document.getElementById('wrongAnswersContainer');
+            if (wrong.length===0) {
+                container.innerHTML = '<p style="color:var(--green);font-weight:600;">🎉 All answers correct! Excellent!</p>';
+            } else {
+                container.innerHTML = wrong.map(w=>`
+                    <div class="explanation-block">
+                        <div class="q-title">❌ Q${w.questionId}: ${w.question}</div>
+                        <p><span class="user-ans">Your Answer: Option ${w.selectedOption} — "${w.selectedOption==='A'?w.optionAText:w.optionBText}"</span></p>
+                        <p><span class="correct-ans">✅ Correct Answer: Option ${w.correctOption} — "${w.correctOption==='A'?w.optionAText:w.optionBText}"</span></p>
+                        <p style="color:var(--text2);margin-top:6px;font-size:0.85rem;white-space:pre-line;">📝 <strong>Explanation:</strong> ${w.explanation}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ==================== BUTTON HANDLERS ====================
+        document.getElementById('btnNext').addEventListener('click', () => {
+            const name = document.getElementById('userName').value.trim();
+            if (!name || name.length < 2) { alert('Please enter a valid full name.'); return; }
+            STATE.userName = name;
+            showScreen('sectionScreen');
+            document.getElementById('sectionHeardText').textContent = '';
+            document.getElementById('sectionCardA').classList.remove('highlighted');
+            document.getElementById('sectionCardB').classList.remove('highlighted');
+            updateIndicator('section', false);
+            // Start voice immediately (user gesture)
+            setTimeout(() => startSectionListening(), 200);
+        });
+        document.getElementById('userName').addEventListener('keydown', (e) => { if (e.key==='Enter') document.getElementById('btnNext').click(); });
+        document.getElementById('btnDownload').addEventListener('click', () => window.print());
+        document.getElementById('btnReload').addEventListener('click', () => location.reload());
+
+        // ==================== INIT ====================
+        (async function init() {
+            if (!(await checkAccess())) { showScreen('blockedScreen'); return; }
+            showScreen('nameScreen');
+            document.getElementById('userName').focus();
+        })();
+    })();
+</script>
+</body>
+</html>
